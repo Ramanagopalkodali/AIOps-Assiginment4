@@ -34,7 +34,6 @@ DA3408-A4-clean/
 └── pyproject.toml            # Python project configuration
 ```
 
-`evidence/video/` currently contains a README; place the recorded dashboard video there when ready. The model weights are large, so check whether `models/blip-base/model.safetensors` is actually tracked before assuming a GitHub clone includes it. `scripts/setup_model.py` is the model setup helper.
 
 ## Run on the prepared Ubuntu VM
 
