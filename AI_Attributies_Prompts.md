@@ -31,7 +31,7 @@ The dashboard descriptions include shorter `AI prompt:` notes. Those are **recor
 | `NodeExporterDown` | `up{job="node"} == 0` | Alert-rule prompt above: node exporter down. |
 | `VMCPUHigh` | `100 * (1 - avg(rate(node_cpu_seconds_total{job="node",mode="idle"}[1m]))) > 80` | High-CPU expression prompt above. |
 
-These are the four rules in the original monitoring configuration. Do not copy alert names or thresholds from another student's repository into this attribution.
+These are the four rules in the original monitoring configuration.
 
 ## Grafana dashboard panels
 
