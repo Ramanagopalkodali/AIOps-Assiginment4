@@ -6,21 +6,32 @@ Caption Lab is a local, CPU-only image captioning app built with Streamlit and `
 
 ```text
 DA3408-A4-clean/
-├── src/caption_app/          # Backend, image validation, metrics, Streamlit UI
-├── scripts/                  # Setup, run, dashboard and service-check helpers
-├── monitoring/               # Prometheus, alert rules, Alertmanager config
-├── grafana/                  # Dashboard JSON and provisioning config
-├── demo_inputs/              # Single photo, 22-image ZIP, messy ZIP, source photos
-├── models/blip-base/         # Locally prepared BLIP model files
+├── src/caption_app/          # Streamlit UI, CPU captioning backend, image handling, metrics
+├── scripts/                  # Model setup, launchers, dashboard generation, service checks
+├── monitoring/
+│   ├── prometheus.yml        # Scrapes the app and node_exporter
+│   ├── rules.yml             # Prometheus alert rules
+│   └── alertmanager.yml      # Alert routing
+├── grafana/
+│   ├── dashboard.json        # Grafana dashboard for submission
+│   └── provisioning/         # Dashboard and data source configuration
+├── demo_inputs/
+│   ├── single/               # Single-image example
+│   └── bulk/
+│       ├── photos/           # 22 source photos
+│       └── archives/         # Normal 22-image ZIP and messy test ZIP
+├── models/blip-base/         # Locally downloaded BLIP model
 ├── evidence/
-│   ├── logs/                 # Saved metrics, targets, checks and run logs
-│   ├── results/              # Single, bulk and messy-bulk caption CSVs
-│   ├── screenshots/          # App and monitoring screenshots
-│   └── video/                # Video instructions/recording location
-├── tests/                    # API and input-handling tests
-├── compose.yml
-├── requirements.txt
-└── pyproject.toml
+│   ├── logs/                 # Metrics, target checks, tests and application logs
+│   ├── results/              # Caption CSVs for single, bulk and messy bulk
+│   └── screenshots/          # Application and monitoring evidence
+├── tests/                    # API and image-input tests
+├── AI_Attributio_Prompts.md  # AI prompts used
+├── AI_DISCLOSUREs.md         # AI-use disclosure
+├── compose.yml               # Prometheus and Alertmanager services
+├── README.md                 # Project overview and instructions
+├── requirements.txt          # Python dependencies
+└── pyproject.toml            # Python project configuration
 ```
 
 `evidence/video/` currently contains a README; place the recorded dashboard video there when ready. The model weights are large, so check whether `models/blip-base/model.safetensors` is actually tracked before assuming a GitHub clone includes it. `scripts/setup_model.py` is the model setup helper.
