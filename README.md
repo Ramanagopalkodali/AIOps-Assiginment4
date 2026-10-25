@@ -34,6 +34,30 @@ DA3408-A4-clean/
 └── pyproject.toml            # Python project configuration
 ```
 
+## First-time setup on Ubuntu
+
+Docker Engine and the Docker Compose plugin must already be installed. The first setup requires internet access to download Python packages, Docker images and the BLIP model.
+
+```bash
+sudo apt update
+sudo apt install -y git python3-venv prometheus-node-exporter
+
+cd ~
+git clone https://github.com/Ramanagopalkodali/AIOps-Assiginment4.git
+cd ~/AIOps-Assiginment4
+
+bash scripts/setup_python.sh
+source .venv/bin/activate
+python -u scripts/setup_model.py
+bash scripts/run_tests.sh
+
+sudo systemctl enable --now prometheus-node-exporter
+docker compose --profile fresh-grafana up -d
+```
+
+Wait for the model setup script to print `Saved:`. The `fresh-grafana` profile starts Grafana along with Prometheus and Alertmanager on a machine where port 3000 is free. The application launch scripts use `.venv` automatically.
+
+For later runs, you do not need to repeat the installation or model download. Open separate terminals, run `cd ~/AIOps-Assiginment4` in each, and start `bash scripts/run_backend.sh`, `bash scripts/run_app.sh` and `bash scripts/run_receiver.sh`.
 
 ## Run on the prepared Ubuntu VM
 
