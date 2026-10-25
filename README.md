@@ -60,13 +60,12 @@ Wait for the model setup script to print `Saved:`. The `fresh-grafana` profile s
 For later runs, you do not need to repeat the installation or model download. Open separate terminals, run `cd ~/AIOps-Assiginment4` in each, and start `bash scripts/run_backend.sh`, `bash scripts/run_app.sh` and `bash scripts/run_receiver.sh`.
 
 ## Run on the prepared Ubuntu VM
-
-These commands use the existing `aiops` Conda environment in `~/DA3408-A4-clean`. Open a separate terminal for each process that stays running.
+Open a separate terminal for each process that stays running.
 
 **Terminal 1 — Prometheus, Alertmanager, node exporter and Grafana**
 
 ```bash
-cd ~/DA3408-A4-clean
+cd ~/AIOps-Assiginment4
 sudo systemctl start prometheus-node-exporter
 docker compose -f compose.yml up -d
 docker start grafana
@@ -77,8 +76,7 @@ If Grafana is already running, the last command can be skipped.
 **Terminal 2 — captioning backend and application metrics**
 
 ```bash
-conda activate aiops
-cd ~/DA3408-A4-clean
+cd ~/AIOps-Assiginment4
 bash scripts/run_backend.sh
 ```
 
@@ -87,16 +85,14 @@ Wait for the CPU model to report ready.
 **Terminal 3 — Streamlit app**
 
 ```bash
-conda activate aiops
-cd ~/DA3408-A4-clean
+cd ~/AIOps-Assiginment4
 bash scripts/run_app.sh
 ```
 
 **Terminal 4 — local alert receiver**
 
 ```bash
-conda activate aiops
-cd ~/DA3408-A4-clean
+cd ~/AIOps-Assiginment4
 bash scripts/run_receiver.sh
 ```
 
