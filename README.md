@@ -1,42 +1,32 @@
 # Caption Lab — DA3408 Assignment 4
 
-Caption Lab is a local, CPU-only image captioning app built with Streamlit and `Salesforce/blip-image-captioning-base`. It captions one uploaded image or processes a ZIP of images and exports the results as CSV. Prometheus collects application and Ubuntu host metrics, Grafana presents them in a live dashboard, and Alertmanager sends alerts to a local receiver.
+Caption Lab is a local, CPU-only image captioning application. A Streamlit interface accepts one image or a ZIP of images; a FastAPI backend runs `Salesforce/blip-image-captioning-base` and returns captions that can be downloaded as CSV. Prometheus collects application and Ubuntu system metrics, Grafana displays the live dashboard, and Alertmanager forwards alerts to a local receiver.
 
 ## Repository at a glance
 
 ```text
-DA3408-A4-clean/
-├── src/caption_app/          # Streamlit UI, CPU captioning backend, image handling, metrics
-├── scripts/                  # Model setup, launchers, dashboard generation, service checks
-├── monitoring/
-│   ├── prometheus.yml        # Scrapes the app and node_exporter
-│   ├── rules.yml             # Prometheus alert rules
-│   └── alertmanager.yml      # Alert routing
-├── grafana/
-│   ├── dashboard.json        # Grafana dashboard for submission
-│   └── provisioning/         # Dashboard and data source configuration
-├── demo_inputs/
-│   ├── single/               # Single-image example
-│   └── bulk/
-│       ├── photos/           # 22 source photos
-│       └── archives/         # Normal 22-image ZIP and messy test ZIP
-├── models/blip-base/         # Locally downloaded BLIP model
-├── evidence/
-│   ├── logs/                 # Metrics, target checks, tests and application logs
-│   ├── results/              # Caption CSVs for single, bulk and messy bulk
-│   └── screenshots/          # Application and monitoring evidence
+AIOps-Assiginment4/
+├── src/caption_app/          # Streamlit UI, CPU backend, image validation, metrics
+├── scripts/                  # Setup, launchers, dashboard generator, service checks
+├── monitoring/               # Prometheus scrape config, rules, Alertmanager config
+├── grafana/                  # Dashboard JSON and provisioning
+├── demo_inputs/              # Local single-image and bulk-upload examples, if provided
+├── models/blip-base/         # Model downloaded during setup; not required in Git
+├── evidence/                 # Local logs, CSV results and screenshots, if provided
 ├── tests/                    # API and image-input tests
-├── AI_Attributio_Prompts.md  # AI prompts used
+├── AI_Attributio_Prompts.md  # AI prompt attribution
 ├── AI_DISCLOSUREs.md         # AI-use disclosure
-├── compose.yml               # Prometheus and Alertmanager services
-├── README.md                 # Project overview and instructions
+├── compose.yml               # Prometheus, Alertmanager and optional Grafana
+├── README.md
 ├── requirements.txt          # Python dependencies
-└── pyproject.toml            # Python project configuration
+└── pyproject.toml
 ```
+
+Generated model weights, personal demo photos and runtime evidence might not be included in a Git clone. Check `git ls-files demo_inputs evidence models` to see which examples are tracked. The commands below work with your own JPG, PNG or WebP images.
 
 ## First-time setup on Ubuntu
 
-Docker Engine and the Docker Compose plugin must already be installed. The first setup requires internet access to download Python packages, Docker images and the BLIP model.
+Use Ubuntu 24.04 on a 64-bit x86 or ARM machine with adequate free disk space and memory. Install [Docker Engine and the Compose plugin](https://docs.docker.com/engine/install/ubuntu/) first. Confirm that `docker compose version` and `docker info` work for your user. Initial setup needs internet access for packages, container images and model weights; inference later reads the local model.
 
 ```bash
 sudo apt update
@@ -50,60 +40,59 @@ bash scripts/setup_python.sh
 source .venv/bin/activate
 python -u scripts/setup_model.py
 bash scripts/run_tests.sh
-
-sudo systemctl enable --now prometheus-node-exporter
-docker compose --profile fresh-grafana up -d
 ```
 
-Wait for the model setup script to print `Saved:`. The `fresh-grafana` profile starts Grafana along with Prometheus and Alertmanager on a machine where port 3000 is free. The application launch scripts use `.venv` automatically.
+`setup_python.sh` creates `.venv` in the cloned repository and installs the application dependencies. Wait for the model setup script to print `Saved:`. The model is stored in `models/blip-base/`; a fresh clone cannot run inference until this step finishes. The tests use a stub model and should pass independently of a live captioning run.
 
-For later runs, you do not need to repeat the installation or model download. Open separate terminals, run `cd ~/AIOps-Assiginment4` in each, and start `bash scripts/run_backend.sh`, `bash scripts/run_app.sh` and `bash scripts/run_receiver.sh`.
+Start node_exporter and the monitoring containers:
 
-## Run on the prepared Ubuntu VM
-Open a separate terminal for each process that stays running.
+```bash
+cd ~/AIOps-Assiginment4
+sudo systemctl enable --now prometheus-node-exporter
+docker compose --profile fresh-grafana up -d
+docker compose ps
+```
 
-**Terminal 1 — Prometheus, Alertmanager, node exporter and Grafana**
+The `fresh-grafana` profile is for a machine **without another Grafana using port 3000**. It starts Grafana alongside Prometheus and Alertmanager. These containers use Ubuntu host networking, so no port-9091 forwarder is needed. Prometheus is at `127.0.0.1:9090` and Grafana at `127.0.0.1:3000` inside Ubuntu. On first login, use the Grafana credentials configured in `compose.yml` and change the password when prompted.
+
+The provisioned Prometheus datasource has UID `prometheus`. Before relying on the dashboard, check that the datasource UID referenced in `grafana/dashboard.json` matches it. A dashboard exported from a different Grafana installation may contain another UID; update the datasource reference or provisioning UID and reload Grafana if needed. The dashboard's JSON must be the working version you submit.
+
+## Run after setup
+
+Use separate Ubuntu terminals. The launch scripts automatically activate `.venv` when it exists; you do not need Conda. Keep the backend, Streamlit and alert receiver terminals open.
+
+**Terminal 1 — start monitoring if it is stopped:**
 
 ```bash
 cd ~/AIOps-Assiginment4
 sudo systemctl start prometheus-node-exporter
-docker compose -f compose.yml up -d
-docker start grafana
+docker compose --profile fresh-grafana up -d
 ```
 
-If Grafana is already running, the last command can be skipped.
-
-**Terminal 2 — captioning backend and application metrics**
+**Terminal 2 — CPU captioning backend and metrics exporter:**
 
 ```bash
 cd ~/AIOps-Assiginment4
 bash scripts/run_backend.sh
 ```
 
-Wait for the CPU model to report ready.
+Wait for `CPU model ready`. The API runs on port 8000 and `/metrics` runs separately on port 8001.
 
-**Terminal 3 — Streamlit app**
+**Terminal 3 — Streamlit application:**
 
 ```bash
 cd ~/AIOps-Assiginment4
 bash scripts/run_app.sh
 ```
 
-**Terminal 4 — local alert receiver**
+**Terminal 4 — local alert receiver:**
 
 ```bash
 cd ~/AIOps-Assiginment4
 bash scripts/run_receiver.sh
 ```
 
-**Terminal 5 — Grafana connection forwarder, if not already running**
-
-```bash
-A4_DOCKER_GATEWAY=$(docker network inspect bridge --format '{{(index .IPAM.Config 0).Gateway}}')
-socat TCP-LISTEN:9091,bind="$A4_DOCKER_GATEWAY",fork,reuseaddr TCP:127.0.0.1:9090
-```
-
-Prometheus runs on **9090**. Port **9091** forwards the existing standalone Grafana container to that server. Leave the `socat` terminal open. A fresh Grafana installation needs a Prometheus datasource whose UID matches the references in `grafana/dashboard.json`.
+For a later run, start with this section; there is no need to reinstall packages or download the model again. Do not start multiple backend instances: each would try to load its own model and bind the same ports.
 
 ## Open and check
 
@@ -144,25 +133,42 @@ The `mode`, `status` and `client` labels help separate workloads and outcomes. A
 
 The manual throughput is an average over the job; a Prometheus `rate()` uses a selected scrape window, so its displayed value need not equal 0.32. A histogram percentile is estimated with `histogram_quantile()` from `_bucket` counts, not calculated exactly from the total time. During evaluation, I can explain these divisions and the units rather than treating the PromQL as a black box.
 
-## Reproduce the demo
+## Reproduce single and bulk captioning
 
-1. In **Single**, upload `demo_inputs/single/images.jpeg` and generate a caption. The exported example is `evidence/results/single_captions.csv`.
-2. In **Bulk**, upload `demo_inputs/bulk/archives/bulk_22_images.zip`. Download the results as CSV; the saved example is `evidence/results/bulk_captions.csv`.
-3. For error handling, upload `demo_inputs/bulk/archives/messy_bulk.zip`. It combines the original valid images with unreadable image entries. Valid images can still receive captions, while the bad entries produce error rows; the saved example is `evidence/results/messy_bulky_captions.csv`. This is a **partial job**, not rejection of the whole archive.
-4. Run Bulk again while watching Grafana to compare image activity with CPU and memory use.
+If the demo images or archives are present in your clone, use `demo_inputs/single/images.jpeg` for Single and `demo_inputs/bulk/archives/bulk_22_images.zip` for Bulk. Otherwise, put your own image in `demo_inputs/single/` and JPG, PNG or WebP photos in `demo_inputs/bulk/photos/`, then build a ZIP:
 
-To check the services or run the repository tests:
-activate the environment and.
 ```bash
 cd ~/AIOps-Assiginment4
+mkdir -p demo_inputs/single demo_inputs/bulk/photos demo_inputs/bulk/archives evidence/results
+source .venv/bin/activate
+python scripts/make_bulk_zip.py demo_inputs/bulk/photos demo_inputs/bulk/archives/demo.zip
+```
+
+Open Streamlit, choose **Single image**, upload one photo, generate the caption and download its CSV. Then choose **Bulk ZIP**, upload the ZIP and download the bulk CSV. Save your actual results in `evidence/results/`. The app accepts at most 60 image entries; its UI also lists upload size limits. Caption quality should be judged from the returned text, not inferred from successful processing alone.
+
+If `demo_inputs/bulk/archives/messy_bulk.zip` is present, it demonstrates a mixed archive: valid image members receive captions, unreadable image members produce error rows, and the accepted job has `partial` status. Non-image entries and Mac metadata are ignored. An invalid ZIP archive itself is rejected. This extra test is optional for the assignment.
+
+To demonstrate a resource correlation, process a bulk ZIP while viewing the dashboard's **active bulk jobs**, **VM CPU** and **VM memory** panels on the same time range.
+
+To save a live service and metrics check after all services are running:
+
+```bash
+cd ~/AIOps-Assiginment4
+source .venv/bin/activate
 python scripts/check_services.py
 bash scripts/run_tests.sh
 ```
 
-For the alert path, keep Prometheus, Alertmanager and `scripts/run_receiver.sh` running; stop the backend, wait for `CaptionAppDown` to fire on the Alerts page, then restart the backend and check for the resolved notification. Do this before the final video because a backend restart resets its live counters.
+## Alerts
 
-## Submission and notes
+`monitoring/rules.yml` defines exporter, model-readiness, node-exporter and high-CPU alerts. `monitoring/alertmanager.yml` sends notifications to the receiver started in Terminal 4. To demonstrate `CaptionAppDown`, leave Prometheus, Alertmanager and the receiver running, stop the backend with Ctrl+C, wait for the rule to fire in Prometheus, then restart the backend and check for a resolved notification. A backend restart resets its application counters, so generate new workload before recording final graphs.
 
-The assignment requests the GitHub code, including `monitoring/prometheus.yml`, the exported `grafana/dashboard.json`, and about a **one-minute video** of the dashboard refreshing every **5 seconds**. The CSVs, screenshots and logs in `evidence/` support the demonstration. Record and add the video separately; the tree shown for this revision contains only `evidence/video/README.md`.
+## Submission
 
-The Python Prometheus Summary produces `_sum` and `_count` series, although the assignment text calls the count suffix `_total`. The exported `grafana/dashboard.json` is the final dashboard; if `scripts/build_dashboard.py` is rerun, check its datasource UID before importing the regenerated JSON. Dashboard query assistance is documented in `AI_Attributes_prompts.md`, and the use of ChatGPT is described in `AI_DISCLOSURE.md`.
+The assignment deliverables are the GitHub source repository, including `monitoring/prometheus.yml`, the final `grafana/dashboard.json`, and an approximately **one-minute** dashboard recording with **5-second refresh**. Add the actual video and ensure evaluators can access it. Keep screenshots, CSVs and logs in `evidence/` if you choose to include them; do not describe local files as committed unless `git ls-files` shows them. If a separate course instruction requires a **2–5-minute working-demo video**, provide that recording as well.
+
+AI assistance and prompts are documented in `AI_DISCLOSUREs.md` and `AI_Attributio_Prompts.md` (the spellings used in this repository). Review those files so they accurately describe the work you performed. Complex generated PromQL or regex should retain the prompt used in its configuration comments.
+
+## Author's prepared VM
+
+The author demonstrated the project from `~/DA3408-A4-clean` using an existing `aiops` Conda environment and a separate Grafana container. That VM needed a Docker-bridge connection forwarder on port 9091. The fresh-clone steps above use the repository's `.venv` and the Compose-managed Grafana profile instead.
