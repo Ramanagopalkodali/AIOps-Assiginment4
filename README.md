@@ -152,10 +152,9 @@ The manual throughput is an average over the job; a Prometheus `rate()` uses a s
 4. Run Bulk again while watching Grafana to compare image activity with CPU and memory use.
 
 To check the services or run the repository tests:
-
+activate the environment and.
 ```bash
-cd ~/DA3408-A4-clean
-conda activate aiops
+cd ~/AIOps-Assiginment4
 python scripts/check_services.py
 bash scripts/run_tests.sh
 ```
