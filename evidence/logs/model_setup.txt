@@ -1,0 +1,2 @@
+Downloading the BLIP base model. Internet is needed for this setup step only.
+Saved: /home/ramscp/DA3408-A4-clean/models/blip-base

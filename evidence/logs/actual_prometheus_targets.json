@@ -1,0 +1,106 @@
+{
+  "status": "success",
+  "data": {
+    "activeTargets": [
+      {
+        "discoveredLabels": {
+          "__address__": "127.0.0.1:9093",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "alertmanager"
+        },
+        "labels": {
+          "instance": "127.0.0.1:9093",
+          "job": "alertmanager"
+        },
+        "scrapePool": "alertmanager",
+        "scrapeUrl": "http://127.0.0.1:9093/metrics",
+        "globalUrl": "http://macb:9093/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-25T13:39:53.310909306Z",
+        "lastScrapeDuration": 0.001530684,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "127.0.0.1:8001",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "caption_app"
+        },
+        "labels": {
+          "instance": "127.0.0.1:8001",
+          "job": "caption_app"
+        },
+        "scrapePool": "caption_app",
+        "scrapeUrl": "http://127.0.0.1:8001/metrics",
+        "globalUrl": "http://macb:8001/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-25T13:39:53.755333131Z",
+        "lastScrapeDuration": 0.001893316,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "127.0.0.1:9100",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "node"
+        },
+        "labels": {
+          "instance": "127.0.0.1:9100",
+          "job": "node"
+        },
+        "scrapePool": "node",
+        "scrapeUrl": "http://127.0.0.1:9100/metrics",
+        "globalUrl": "http://macb:9100/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-25T13:39:53.485402073Z",
+        "lastScrapeDuration": 0.05882226,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "127.0.0.1:9090",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "5s",
+          "job": "prometheus"
+        },
+        "labels": {
+          "instance": "127.0.0.1:9090",
+          "job": "prometheus"
+        },
+        "scrapePool": "prometheus",
+        "scrapeUrl": "http://127.0.0.1:9090/metrics",
+        "globalUrl": "http://macb:9090/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-25T13:39:56.519445387Z",
+        "lastScrapeDuration": 0.002884678,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "5s"
+      }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": {
+      "alertmanager": 0,
+      "caption_app": 0,
+      "node": 0,
+      "prometheus": 0
+    }
+  }
+}

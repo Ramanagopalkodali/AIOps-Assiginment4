@@ -1,0 +1,36 @@
+/home/ramscp/miniforge3/envs/aiops/lib/python3.10/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_bad_zip_returns_400 (tests.test_api.APITests) ... 2026-10-25 11:31:53,197 INFO CPU model ready; API 8000; exporter 8001
+2026-10-25 11:31:53,205 INFO HTTP Request: POST http://testserver/caption "HTTP/1.1 400 Bad Request"
+ok
+test_bulk_partial_failure_keeps_valid_result (tests.test_api.APITests) ... 2026-10-25 11:31:53,209 INFO CPU model ready; API 8000; exporter 8001
+2026-10-25 11:31:53,292 ERROR Failed image in bulk job
+Traceback (most recent call last):
+  File "/home/ramscp/DA3408-A4-clean/src/caption_app/backend.py", line 119, in caption
+    image = decode_image(payload)
+  File "/home/ramscp/DA3408-A4-clean/src/caption_app/image_inputs.py", line 21, in decode_image
+    with Image.open(io.BytesIO(data)) as original:
+  File "/home/ramscp/miniforge3/envs/aiops/lib/python3.10/site-packages/PIL/Image.py", line 3715, in open
+    raise UnidentifiedImageError(msg)
+PIL.UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0xfd3823f8f830>
+2026-10-25 11:31:53,299 INFO HTTP Request: POST http://testserver/caption "HTTP/1.1 200 OK"
+ok
+test_invalid_mode_returns_422 (tests.test_api.APITests) ... 2026-10-25 11:31:53,314 INFO CPU model ready; API 8000; exporter 8001
+2026-10-25 11:31:53,318 INFO HTTP Request: POST http://testserver/caption "HTTP/1.1 422 Unprocessable Entity"
+ok
+test_session_labels_are_readable_and_sanitized (tests.test_api.APITests) ... 2026-10-25 11:31:53,325 INFO CPU model ready; API 8000; exporter 8001
+ok
+test_single_success_and_metrics (tests.test_api.APITests) ... 2026-10-25 11:31:53,329 INFO CPU model ready; API 8000; exporter 8001
+2026-10-25 11:31:53,333 INFO HTTP Request: POST http://testserver/caption "HTTP/1.1 200 OK"
+ok
+test_corrupt_image_is_rejected (tests.test_inputs.UploadTests) ... ok
+test_empty_zip_is_rejected (tests.test_inputs.UploadTests) ... ok
+test_excessive_count_is_rejected (tests.test_inputs.UploadTests) ... ok
+test_unsafe_member_is_rejected (tests.test_inputs.UploadTests) ... ok
+test_valid_image_preserves_size_and_rgb (tests.test_inputs.UploadTests) ... ok
+test_zip_ignores_mac_metadata_and_non_images (tests.test_inputs.UploadTests) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.156s
+
+OK

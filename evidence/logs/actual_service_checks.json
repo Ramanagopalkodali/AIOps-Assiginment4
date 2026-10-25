@@ -1,0 +1,53 @@
+{
+  "checked_at": "2026-10-25T13:39:56.823210+00:00",
+  "checks": {
+    "caption_api": {
+      "ok": true,
+      "http_status": 200
+    },
+    "caption_metrics": {
+      "ok": true,
+      "http_status": 200
+    },
+    "streamlit": {
+      "ok": true,
+      "http_status": 200
+    },
+    "node_exporter": {
+      "ok": true,
+      "http_status": 200
+    },
+    "prometheus": {
+      "ok": true,
+      "http_status": 200
+    },
+    "grafana": {
+      "ok": true,
+      "http_status": 200
+    },
+    "alertmanager": {
+      "ok": true,
+      "http_status": 200
+    },
+    "local_receiver": {
+      "ok": true,
+      "http_status": 200
+    },
+    "scrape_alertmanager": {
+      "ok": true,
+      "health": "up"
+    },
+    "scrape_caption_app": {
+      "ok": true,
+      "health": "up"
+    },
+    "scrape_node": {
+      "ok": true,
+      "health": "up"
+    },
+    "scrape_prometheus": {
+      "ok": true,
+      "health": "up"
+    }
+  }
+}
