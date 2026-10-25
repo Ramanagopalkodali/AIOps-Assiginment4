@@ -1,0 +1,36 @@
+# AI attribution prompt: "Create local monitoring alerts for a CPU captioning app:
+# unavailable exporter, unavailable model, node exporter down, and VM CPU >80%.
+# Use sustained conditions, labels and explanations. Never invent measurements."
+groups:
+  - name: captioning
+    rules:
+      - alert: CaptionAppDown
+        expr: up{job="caption_app"} == 0
+        for: 15s
+        labels: {severity: critical}
+        annotations:
+          summary: Captioning metrics exporter is unreachable
+          description: Check the backend terminal and port 8001. Exporter reachability does not prove model readiness.
+      - alert: CaptionModelNotReady
+        expr: caption_model_ready{job="caption_app"} == 0
+        for: 30s
+        labels: {severity: warning}
+        annotations:
+          summary: Captioning model is not ready
+          description: Check model files and backend startup logs.
+      - alert: NodeExporterDown
+        expr: up{job="node"} == 0
+        for: 15s
+        labels: {severity: warning}
+        annotations:
+          summary: Ubuntu VM metrics are unavailable
+          description: Check the prometheus-node-exporter service on port 9100.
+      - alert: VMCPUHigh
+        # Prompt: "Compute Ubuntu VM non-idle CPU percent averaged over cores,
+        # with rate over one minute, and alert above 80% for 30 seconds."
+        expr: 100 * (1 - avg(rate(node_cpu_seconds_total{job="node",mode="idle"}[1m]))) > 80
+        for: 30s
+        labels: {severity: warning}
+        annotations:
+          summary: Ubuntu VM CPU has been above 80 percent
+          description: Compare CPU usage with bulk jobs, throughput and inference latency in Grafana.

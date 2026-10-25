@@ -1,0 +1,2703 @@
+{
+  "uid": "caption-lab",
+  "title": "Caption Lab | CPU image captioning",
+  "tags": [
+    "DA3408",
+    "A4",
+    "CPU"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 2,
+  "refresh": "5s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "editable": true,
+  "panels": [
+    {
+      "id": 23,
+      "type": "text",
+      "title": "Caption Lab \u2014 live CPU captioning and observability",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Refresh: 5 seconds.** Read from health to workload, latency and Ubuntu VM resources. Exporter UP means metrics are reachable; model READY means weights are loaded. The plots below use **Time (browser-local timezone) on the x-axis** and explicitly labeled **linear y-axes**. All values come from actual application/exporter observations."
+      }
+    },
+    {
+      "id": 1,
+      "title": "Application exporter",
+      "description": "Current status: 1 = ready/reachable; 0 = unavailable. A reachable exporter alone does not prove inference works.",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "up{job=\"caption_app\"}",
+          "legendFormat": "Application exporter",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {},
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN / NOT READY",
+                  "color": "#D55E00"
+                },
+                "1": {
+                  "text": "UP / READY",
+                  "color": "#0072B2"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Caption model ready",
+      "description": "Current status: 1 = ready/reachable; 0 = unavailable. A reachable exporter alone does not prove inference works.",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "caption_model_ready{job=\"caption_app\"}",
+          "legendFormat": "Caption model ready",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {},
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN / NOT READY",
+                  "color": "#D55E00"
+                },
+                "1": {
+                  "text": "UP / READY",
+                  "color": "#0072B2"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Ubuntu node exporter",
+      "description": "Current status: 1 = ready/reachable; 0 = unavailable. A reachable exporter alone does not prove inference works.",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "up{job=\"node\"}",
+          "legendFormat": "Ubuntu node exporter",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {},
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN / NOT READY",
+                  "color": "#D55E00"
+                },
+                "1": {
+                  "text": "UP / READY",
+                  "color": "#0072B2"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Active bulk jobs",
+      "description": "Current accepted bulk jobs, including work waiting for the CPU lock. Zero means no bulk job is in progress.",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "caption_active_jobs{mode=\"bulk\"}",
+          "legendFormat": "Bulk jobs",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 24,
+      "type": "text",
+      "title": "Workload and throughput",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: successful images per second by mode. Right: accepted jobs in progress, including CPU wait. Bulk activity should align with throughput and resource changes.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Successful images \u2022 per mode",
+      "description": "Images completed per second over one minute. AI prompt: sum the rate of successful image counters separately for Single and Bulk; preserve mode comparison.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_images_total{status=\"success\",mode=\"single\"}[1m]))",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(caption_images_total{status=\"success\",mode=\"bulk\"}[1m]))",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "suffix: images/s",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Images/s (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Accepted jobs in progress",
+      "description": "Concurrent jobs may wait for one shared CPU model. Compare bulk activity with the resource panels on the same time axis.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "caption_active_jobs{mode=\"single\"}",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "caption_active_jobs{mode=\"bulk\"}",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Jobs (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 25,
+      "type": "text",
+      "title": "Inference time versus user-visible image time",
+      "gridPos": {
+        "x": 0,
+        "y": 20,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: mean and estimated p95 for model.generate only. Right: per-image mean including decode and queue delay. Missing observations produce gaps, not zero-second inference.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Model inference \u2022 mean and p95",
+      "description": "Wall time in model.generate only. AI prompt: weighted mean = sum(rate(duration_sum))/sum(rate(duration_count)); approximate p95 = histogram_quantile over summed buckets. No observations gives a gap, not zero latency.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_inference_seconds_sum[2m])) / sum(rate(caption_inference_seconds_count[2m]))",
+          "legendFormat": "Mean",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(caption_inference_seconds_bucket[2m])))",
+          "legendFormat": "p95 estimate",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Inference seconds (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mean"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p95 estimate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Per-image latency \u2022 decode + queue + inference",
+      "description": "AI prompt: calculate weighted per-mode mean image latency from histogram sums and counts. Queue delay is included here, unlike model inference.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_image_duration_seconds_sum{mode=\"single\"}[2m])) / sum(rate(caption_image_duration_seconds_count{mode=\"single\"}[2m]))",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(caption_image_duration_seconds_sum{mode=\"bulk\"}[2m])) / sum(rate(caption_image_duration_seconds_count{mode=\"bulk\"}[2m]))",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Seconds/image (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 26,
+      "type": "text",
+      "title": "Job duration and processing outcomes",
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: Summary mean for an entire job; a ZIP is one job. Right: image success/error totals since backend start. Counters reset on restart.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 9,
+      "title": "Whole-job duration \u2022 Summary",
+      "description": "AI prompt: mean full-job duration = Summary sum rate divided by Summary observation count rate, per mode. Bulk includes all images, so it should usually exceed Single. Python Summary has _sum and _count, not built-in quantiles.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 36,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_job_duration_seconds_sum{mode=\"single\"}[5m])) / sum(rate(caption_job_duration_seconds_count{mode=\"single\"}[5m]))",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(caption_job_duration_seconds_sum{mode=\"bulk\"}[5m])) / sum(rate(caption_job_duration_seconds_count{mode=\"bulk\"}[5m]))",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Seconds/job (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "Images attempted since backend start",
+      "description": "AI prompt: sum image counters by mode and success/error outcome. These totals reset when the backend restarts; status is also written in the result CSV.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 36,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(caption_images_total{mode=\"single\",status=\"success\"})",
+          "legendFormat": "Single success",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(caption_images_total{mode=\"single\",status=\"error\"})",
+          "legendFormat": "Single error",
+          "range": true
+        },
+        {
+          "refId": "C",
+          "expr": "sum(caption_images_total{mode=\"bulk\",status=\"success\"})",
+          "legendFormat": "Bulk success",
+          "range": true
+        },
+        {
+          "refId": "D",
+          "expr": "sum(caption_images_total{mode=\"bulk\",status=\"error\"})",
+          "legendFormat": "Bulk error",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Images (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#009E73"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CC79A7"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 27,
+      "type": "text",
+      "title": "Correlate bulk uploads with Ubuntu VM resources",
+      "gridPos": {
+        "x": 0,
+        "y": 44,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: VM CPU averaged over cores. Right: VM memory using MemAvailable. Orange bars on each right axis show bulk jobs. These measure Ubuntu, not the Mac host.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 11,
+      "title": "Ubuntu VM CPU \u2022 correlate with bulk",
+      "description": "AI prompt: VM CPU percent = 100*(1-mean(rate(idle CPU seconds[1m]))) over VM cores. Bulk line uses the right axis. These are Ubuntu guest metrics, not Mac host metrics.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 48,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{job=\"node\",mode=\"idle\"}[1m])))",
+          "legendFormat": "VM CPU",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "caption_active_jobs{mode=\"bulk\"}",
+          "legendFormat": "Bulk jobs",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "VM CPU % (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "VM CPU"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk jobs"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk jobs"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Bulk jobs (linear)"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 12,
+      "title": "Ubuntu VM memory \u2022 correlate with bulk",
+      "description": "AI prompt: used-memory percent = 100*(1-MemAvailable/MemTotal). Bulk jobs use the right axis. MemAvailable includes reclaimable memory; do not substitute MemFree.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 48,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * (1 - node_memory_MemAvailable_bytes{job=\"node\"} / node_memory_MemTotal_bytes{job=\"node\"})",
+          "legendFormat": "VM memory",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "caption_active_jobs{mode=\"bulk\"}",
+          "legendFormat": "Bulk jobs",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "VM memory % (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "VM memory"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk jobs"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk jobs"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Bulk jobs (linear)"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 12
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 28,
+      "type": "text",
+      "title": "Storage and model memory",
+      "gridPos": {
+        "x": 0,
+        "y": 56,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: Ubuntu root disk used percent. Right: backend RSS versus model weights; RSS includes runtime overhead. Streamlit memory is included only in VM-wide measurements.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 13,
+      "title": "Ubuntu root filesystem \u2022 used space",
+      "description": "AI prompt: root filesystem used percent = 100*(1-avail/size), select mountpoint=/ and exclude tmpfs/overlay. This measures the guest filesystem, not the Mac disk.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 60,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"node\",mountpoint=\"/\",fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{job=\"node\",mountpoint=\"/\",fstype!~\"tmpfs|overlay\"})",
+          "legendFormat": "Root disk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Disk used % (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Root disk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 14,
+      "title": "Inference-process RAM and model weights",
+      "description": "Model weights are parameter/buffer storage only; RSS also includes Python, temporary tensors and decoded inputs. These are bytes, not VM-wide RAM.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 60,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "caption_process_memory_bytes",
+          "legendFormat": "Process RSS",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "caption_model_weight_bytes",
+          "legendFormat": "Model weights",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Memory bytes (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Process RSS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Model weights"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 29,
+      "type": "text",
+      "title": "Outcomes and client sessions",
+      "gridPos": {
+        "x": 0,
+        "y": 68,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: successful, partial and failed completed jobs. Right: image totals by short actual session ID. Use the table labels to distinguish sessions; prefixes can collide and are not user counts.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 15,
+      "title": "Jobs completed by outcome",
+      "description": "AI prompt: sum completed job counters for success/partial/error separately. Partial means some ZIP members failed. Counters reset on backend restart.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 72,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(caption_jobs_total{status=\"success\"})",
+          "legendFormat": "Success",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(caption_jobs_total{status=\"partial\"})",
+          "legendFormat": "Partial",
+          "range": true
+        },
+        {
+          "refId": "C",
+          "expr": "sum(caption_jobs_total{status=\"error\"})",
+          "legendFormat": "Error",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Jobs (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Partial"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#009E73"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 16,
+      "title": "Client sessions \u2022 image activity",
+      "description": "AI prompt: show successful image counts by the first 12 safe characters of the actual browser session ID. Session prefixes are not unique people and can collide. For a small demo only; avoid unbounded labels in production.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 72,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (client) (caption_images_total{status=\"success\"})",
+          "legendFormat": "{{client}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Images (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{{client}}"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 30,
+      "type": "text",
+      "title": "Process load and rejected uploads",
+      "gridPos": {
+        "x": 0,
+        "y": 80,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: 100% CPU means one full core, so this can exceed 100%. Right: rejected request count; corrupt images inside accepted ZIPs appear in image errors instead.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 17,
+      "title": "Inference-process CPU",
+      "description": "100% equals one fully used CPU core; this can exceed 100% on multiple cores. VM CPU above is normalized across all VM cores.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 84,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "caption_process_cpu_percent",
+          "legendFormat": "Process CPU",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Process CPU % (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Process CPU"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 18,
+      "title": "Rejected uploads",
+      "description": "Rejected oversized or malformed uploads. Corrupt images inside accepted jobs are counted in image errors instead. Rejections do not become accepted jobs.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 84,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "caption_rejected_uploads_total",
+          "legendFormat": "Rejected requests",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Rejections (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rejected requests"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 31,
+      "type": "text",
+      "title": "Incoming bytes and alerts",
+      "gridPos": {
+        "x": 0,
+        "y": 92,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: accepted uploaded bytes per second, including compressed ZIP size. Right: firing alert count. Check the local receiver for actual alert delivery.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 19,
+      "title": "Uploaded input bytes \u2022 rate",
+      "description": "AI prompt: show rate of accepted uploaded-byte counters separately by mode. This is application input volume, not operating-system network traffic.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 96,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_upload_bytes_total{mode=\"single\"}[1m]))",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(caption_upload_bytes_total{mode=\"bulk\"}[1m]))",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Bytes/second (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 20,
+      "title": "Prometheus firing alerts",
+      "description": "Number of firing alert series. Check Prometheus Alerts, Alertmanager and the local receiver for details; pending conditions are excluded.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 96,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(ALERTS{alertstate=\"firing\"}) or vector(0)",
+          "legendFormat": "Firing alerts",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Alerts (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Firing alerts"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 32,
+      "type": "text",
+      "title": "Two additional Summaries",
+      "gridPos": {
+        "x": 0,
+        "y": 104,
+        "w": 24,
+        "h": 4
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "Left: encoded bytes per attempted image, including corrupt entries. Right: Unicode characters per successful caption, including spaces. Caption length is not an accuracy metric.\n\n**X-axis: Time (browser-local timezone). Y-axes: linear; units on each plot.**"
+      }
+    },
+    {
+      "id": 21,
+      "title": "Encoded image size \u2022 Summary mean",
+      "description": "AI prompt: weighted mean bytes per attempted image = sum(rate(caption_image_upload_bytes_sum[5m])) / sum(rate(caption_image_upload_bytes_count[5m])), separately by mode. Includes corrupt image entries; excludes ZIP compression overhead.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 108,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_image_upload_bytes_sum{mode=\"single\"}[5m])) / sum(rate(caption_image_upload_bytes_count{mode=\"single\"}[5m]))",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(caption_image_upload_bytes_sum{mode=\"bulk\"}[5m])) / sum(rate(caption_image_upload_bytes_count{mode=\"bulk\"}[5m]))",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Encoded bytes/image (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    },
+    {
+      "id": 22,
+      "title": "Generated caption length \u2022 Summary mean",
+      "description": "AI prompt: weighted mean Unicode characters per successful caption = sum(rate(caption_length_characters_sum[5m])) / sum(rate(caption_length_characters_count[5m])), separately by mode. Includes spaces, excludes failed captions; length is not a quality score.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 108,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(caption_length_characters_sum{mode=\"single\"}[5m])) / sum(rate(caption_length_characters_count{mode=\"single\"}[5m]))",
+          "legendFormat": "Single",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(caption_length_characters_sum{mode=\"bulk\"}[5m])) / sum(rate(caption_length_characters_count{mode=\"bulk\"}[5m]))",
+          "legendFormat": "Bulk",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "suffix: characters",
+          "min": 0,
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Characters/caption (linear)",
+            "axisCenteredZero": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "always",
+            "pointSize": 3,
+            "spanNulls": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Single"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bulk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    5
+                  ]
+                }
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        }
+      }
+    }
+  ],
+  "annotations": {
+    "list": []
+  },
+  "templating": {
+    "list": []
+  }
+}

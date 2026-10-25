@@ -1,0 +1,17 @@
+# Versions already installed and checked in your aiops environment.
+# No reinstall is necessary when using that environment.
+torch==2.9.0
+transformers==4.57.1
+streamlit==1.65.0
+safetensors==0.8.0
+huggingface-hub==0.36.2
+fastapi==0.141.1
+uvicorn==0.53.0
+python-multipart==0.0.32
+prometheus-client==0.26.0
+psutil==7.2.2
+Pillow==12.3.0
+requests==2.34.2
+numpy==1.26.4
+pandas==2.3.3
+httpx==0.28.1

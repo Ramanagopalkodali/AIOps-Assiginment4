@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.env
+models/*
+!models/README.md
+demo_inputs/**
+!demo_inputs/**/
+!demo_inputs/**/README.md
+evidence/**
+!evidence/**/
+!evidence/**/README.md
+*.mp4
+*.mov
